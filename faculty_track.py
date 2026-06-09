@@ -1,5 +1,11 @@
 from manim import *
 
+# Set scene resolution and aspect ratio to match the map image (868x798) to prevent zooming/cropping
+config.pixel_width = 868
+config.pixel_height = 798
+config.frame_width = 14.2222222
+config.frame_height = 14.2222222 * 798 / 868
+
 
 class FacultyEngineeringTrack(Scene):
     def construct(self):
@@ -7,6 +13,10 @@ class FacultyEngineeringTrack(Scene):
         # CONFIG
         # =========================
         MAP_IMAGE = "assets/ft_track_map.png"
+
+        # Set to True to overlay a labeled coordinate grid and show points with their indices.
+        # Set to False to run the actual final animation.
+        SHOW_COORDINATE_GRID = True
 
         # 16:9 scene
         self.camera.background_color = WHITE
@@ -37,75 +47,147 @@ class FacultyEngineeringTrack(Scene):
         # =========================
         route_points = [
             # === START: South end of Jl. Grafika, near Jl. Sains ===
-            [2.5, -3.0, 0],
+            [4.3, -2.8, 0],
 
-            # Go NORTH up Jl. Grafika road
-            [2.5, -2.6, 0],
-            [2.4, -2.2, 0],
+            # Go NORTH up Jl. Grafika road to upper-right corner
+            [4.2, -2.0, 0],
+            [4.4, -0.5, 0],
+            [5.0, 1.0, 0],
+            [5.25, 2.0, 0],
 
-            # Tight LEFT turn (west) at intersection — from zoomed images
-            [2.2, -2.0, 0],
-            [1.8, -1.85, 0],
-            [1.3, -1.8, 0],
-
-            # Tight turn back NORTH on next road
-            [1.05, -1.6, 0],
-            [0.9, -1.2, 0],
-            [0.8, -0.6, 0],
-
-            # Continue north, curving northeast
-            [0.9, 0.0, 0],
-            [1.3, 0.5, 0],
-            [2.0, 0.8, 0],
-
-            # Head east to join the eastern perimeter road
-            [3.0, 1.0, 0],
-            [4.0, 1.1, 0],
-            [4.8, 1.3, 0],
-
-            # Up the east side (heading north)
-            [5.3, 1.7, 0],
-            [5.6, 2.2, 0],
-
-            # Top-right corner — tight turn west
-            [5.5, 2.7, 0],
-            [5.0, 2.95, 0],
-            [4.2, 3.05, 0],
-
+            # Top-right corner — curve west onto Jl. Selokan Mataram
+            [5.0, 2.5, 0],
+            
             # West along the top (Jl. Selokan Mataram)
-            [3.0, 3.12, 0],
-            [1.5, 3.18, 0],
-            [0.0, 3.2, 0],
-            [-1.5, 3.2, 0],
-            [-3.0, 3.1, 0],
-            [-3.8, 3.0, 0],
+            [3.5, 3.0, 0],
+            [2.5, 3.5, 0],
+            [1.5, 3.9, 0],
+            [0.5, 4.5, 0],
+            [-0.5, 5, 0],
+            [-1.5, 4.8, 0],
+            [-2.75, 4.65, 0],
+
+            # Top-left corner — heading south
+            [-3.25, 4.3, 0],
+            [-3.65, 3.5, 0],
 
             # Down the left/west side (heading south, near river)
-            [-4.5, 2.6, 0],
-            [-5.0, 1.8, 0],
-            [-5.3, 0.8, 0],
-            [-5.6, -0.1, 0],
-            [-6.1, -0.8, 0],
-            [-6.35, -1.6, 0],
+            [-3.65, 2.5, 0],
+            [-3.6, 2.0, 0],
+            [-3.48, 1.0, 0],
+            [-4.25, 0.0, 0],
+            [-4.85, -0.25, 0],
+            [-6.15, -1.0, 0],
 
             # Bottom-left corner — tight turn east
-            [-6.1, -2.1, 0],
-            [-5.3, -2.4, 0],
-            [-4.2, -2.6, 0],
+            [-6.60, -1.5, 0],
+            [-6.75, -2.0, 0],
+            [-6.75, -2.5, 0],
+            [-6.65, -3.0, 0],
+            [-6.0, -3.5, 0],
+            [-5.0, -3.9, 0],
 
             # East across the bottom road
-            [-3.0, -2.75, 0],
-            [-1.5, -2.85, 0],
-            [0.0, -2.9, 0],
-            [1.2, -2.95, 0],
-            [2.0, -3.0, 0],
+            [-4.0, -4.1, 0],
+            [-3.0, -3.75, 0],
+            [-2.5, -3.5, 0],
+            [-1.5, -3.25, 0],
+            [-0.5, -3.6, 0],
+            [0.5, -4.1, 0],
+            [1.5, -4.7, 0],
+            [2.5, -5.0, 0],
+            [3.5, -5.4, 0],
+            [4.45, -5.75, 0],
+            [4.55, -5.1, 0],
+            [4.4, -4.0, 0],
 
             # Return to START
-            [2.5, -3.0, 0],
+            [4.2, -2.0, 0],
         ]
 
+        # =========================
+        # COORDINATE GRID HELPER (for editing)
+        # =========================
+        if SHOW_COORDINATE_GRID:
+            # High-contrast coordinate grid (LaTeX-independent plane)
+            grid = NumberPlane(
+                x_range=[-8, 8, 1],
+                y_range=[-8, 8, 1],
+                background_line_style={
+                    "stroke_color": RED,
+                    "stroke_width": 1.5,
+                    "stroke_opacity": 0.5
+                },
+                axis_config={
+                    "stroke_color": RED,
+                    "stroke_width": 3,
+                }
+            )
+            self.add(grid)
+            
+            # Finer grid lines at 0.5 intervals
+            fine_grid = NumberPlane(
+                x_range=[-8, 8, 0.5],
+                y_range=[-8, 8, 0.5],
+                background_line_style={
+                    "stroke_color": ORANGE,
+                    "stroke_width": 0.8,
+                    "stroke_opacity": 0.3
+                }
+            )
+            self.add(fine_grid)
+
+            # Manual text coordinate labels for axes (LaTeX-independent)
+            for x in range(-7, 8):
+                if x == 0:
+                    continue
+                lbl = Text(str(x), font_size=14, color=RED)
+                lbl.set_stroke(WHITE, width=3, background=True)
+                lbl.move_to([x, -0.3, 0])
+                self.add(lbl)
+
+            for y in range(-6, 7):
+                if y == 0:
+                    continue
+                lbl = Text(str(y), font_size=14, color=RED)
+                lbl.set_stroke(WHITE, width=3, background=True)
+                lbl.move_to([-0.3, y, 0])
+                self.add(lbl)
+
+            # Origin label
+            origin_lbl = Text("0", font_size=14, color=RED)
+            origin_lbl.set_stroke(WHITE, width=3, background=True)
+            origin_lbl.move_to([-0.25, -0.25, 0])
+            self.add(origin_lbl)
+
+            # Label all points with their indices and coordinates
+            for idx, pt in enumerate(route_points):
+                dot = Dot(pt, color=BLUE, radius=0.08)
+                lbl_text = f"{idx}: [{pt[0]}, {pt[1]}]"
+                lbl = Text(lbl_text, font_size=12, color=BLUE_E)
+                lbl.set_stroke(WHITE, width=3, background=True)
+                # Alternate label placement slightly to avoid overlap
+                direction = UR if idx % 2 == 0 else DR
+                lbl.next_to(dot, direction, buff=0.04)
+                self.add(dot, lbl)
+
+            # Add mode banner
+            banner = Text("GRID MODE (Set SHOW_COORDINATE_GRID = False for final render)", font_size=16, color=RED)
+            banner.set_stroke(WHITE, width=4, background=True)
+            banner.to_edge(UP, buff=0.2)
+            self.add(banner)
+            
+            # Trace lines
+            trace_line = VMobject()
+            trace_line.set_points_as_corners([np.array(p) for p in route_points])
+            trace_line.set_stroke(color=BLUE_D, width=4, opacity=0.7)
+            self.add(trace_line)
+
+            self.wait(1)
+            return
+
         route = VMobject()
-        route.set_points_smoothly([np.array(p) for p in route_points])
+        route.set_points_as_corners([np.array(p) for p in route_points])
         route.set_stroke(color=BLUE_D, width=12, opacity=0.95)
 
         # Glowing duplicate track
@@ -151,7 +233,7 @@ class FacultyEngineeringTrack(Scene):
         # =========================
         # DIRECTION ARROWS along route
         # =========================
-        arrow_indices = [3, 8, 13, 19, 23, 28]
+        arrow_indices = [3, 9, 15, 22, 28, 35]
         direction_arrows = VGroup()
         for i in arrow_indices:
             if i + 1 < len(route_points):
