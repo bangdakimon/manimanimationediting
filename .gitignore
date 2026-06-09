@@ -4,3 +4,20 @@ __pycache__/
 *.pyc
 .ipynb_checkpoints/
 .DS_Store
+
+# Python portable distribution files
+/DLLs/
+/Doc/
+/Lib/
+/Scripts/
+/Tools/
+/include/
+/libs/
+/tcl/
+python.exe
+pythonw.exe
+*.dll
+*.exe
+LICENSE.txt
+NEWS.txt
+
