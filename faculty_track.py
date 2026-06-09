@@ -16,7 +16,7 @@ class FacultyEngineeringTrack(Scene):
 
         # Set to True to overlay a labeled coordinate grid and show points with their indices.
         # Set to False to run the actual final animation.
-        SHOW_COORDINATE_GRID = True
+        SHOW_COORDINATE_GRID = False
 
         # 16:9 scene
         self.camera.background_color = WHITE
@@ -50,7 +50,8 @@ class FacultyEngineeringTrack(Scene):
             [4.3, -2.8, 0],
 
             # Go NORTH up Jl. Grafika road to upper-right corner
-            [4.2, -2.0, 0],
+            [4.15, -1.9, 0],
+            [4.1, -1.6, 0],
             [4.4, -0.5, 0],
             [5.0, 1.0, 0],
             [5.25, 2.0, 0],
@@ -102,7 +103,7 @@ class FacultyEngineeringTrack(Scene):
             [4.4, -4.0, 0],
 
             # Return to START
-            [4.2, -2.0, 0],
+            [4.3, -2.8, 0],
         ]
 
         # =========================
